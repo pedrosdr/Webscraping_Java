@@ -27,6 +27,7 @@ public class Scraping
     private String logPath;
     private String thread;
     private String exceptionPath;
+    private DataFrame percentuais_saeb;
 
     public Scraping(int fromIndex, int toIndex, String inputPath, String outputPath, String driverPath, String logPath, String exceptionPath, String thread)
     {
@@ -38,6 +39,7 @@ public class Scraping
         this.logPath = logPath;
         this.thread = thread;
         this.exceptionPath = exceptionPath;
+        this.percentuais_saeb = new DataFrame();
     }
 
     public void execute() throws InterruptedException {
@@ -46,14 +48,11 @@ public class Scraping
         int dataCount = 0;
         long startTime = System.currentTimeMillis();
 
-        DataFrame percentuais_saeb = new DataFrame();
-
         System.setProperty("webdriver.chrome.driver", driverPath);
 
         WebDriver driver = new ChromeDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        int saveTicker = 0;
         for(int i = 0; i < codigos.length;)
         {
             String codigo = codigos[i];
@@ -65,6 +64,32 @@ public class Scraping
                 if(anchor.getAttribute("innerHTML").contains("/  /  -"))
                 {
                     i++;
+                    dataCount++;
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    String dtString = LocalDateTime.now().format(dtf);
+                    long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // em segundos
+                    double speed = 3600.0 * dataCount / elapsedTime;
+                    int recordsLeft = codigos.length - dataCount;
+                    double hoursLeft = recordsLeft / speed;
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(" --> ")
+                            .append("! Not found on (").append(this.thread).append("), ")
+                            .append(codigo)
+                            .append(", ").append(String.format("%.2f", 100.0 * dataCount / codigos.length)).append("%")
+                            .append(", ").append(dataCount).append(" records")
+                            .append(", ").append(String.format("%d", elapsedTime)).append(" s")
+                            .append(", ").append(String.format("%.2f", hoursLeft)).append(" hours left")
+                            .append(", ").append(String.format("%.1f", speed)).append(" records/hour")
+                            .append(", ").append(dtString);
+                    System.out.println(sb.toString());
+                    DataUtils.logProgress(logPath, sb.toString());
+                    if(dataCount % 10 == 0)
+                    {
+                        percentuais_saeb.toCSV(outputPath);
+                        System.out.println("   |--> (" + this.thread + "} Arquivo CSV salvo.");
+                        DataUtils.logProgress(logPath, "   |--> (" + this.thread + "} Arquivo CSV salvo.");
+                    }
                     continue;
                 }
 
@@ -123,15 +148,18 @@ public class Scraping
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 String dtString = LocalDateTime.now().format(dtf);
                 long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // em segundos
-                double speed = 3600.0 * (i+1) / elapsedTime;
-                int recordsLeft = codigos.length - (i+1);
+                double speed = 3600.0 * dataCount / elapsedTime;
+                int recordsLeft = codigos.length - dataCount;
                 double hoursLeft = recordsLeft / speed;
+
+                if(codigo.equals("29410720"))
+                    throw new RuntimeException("teste");
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(" --> ")
                         .append("(").append(this.thread).append("), ")
                         .append(codigo)
-                        .append(", ").append(String.format("%.2f", 100.0 * (i + 1) / codigos.length)).append("%")
+                        .append(", ").append(String.format("%.2f", 100.0 * dataCount / codigos.length)).append("%")
                         .append(", ").append(dataCount).append(" records")
                         .append(", ").append(String.format("%d", elapsedTime)).append(" s")
                         .append(", ").append(String.format("%.2f", hoursLeft)).append(" hours left")
@@ -140,18 +168,19 @@ public class Scraping
                 System.out.println(sb.toString());
                 DataUtils.logProgress(logPath, sb.toString());
 
-                if(saveTicker % 10 == 0)
+                if(dataCount % 10 == 0)
                 {
                     percentuais_saeb.toCSV(outputPath);
                     System.out.println("   |--> (" + this.thread + "} Arquivo CSV salvo.");
                     DataUtils.logProgress(logPath, "   |--> (" + this.thread + "} Arquivo CSV salvo.");
                 }
-                saveTicker++;
                 i++;
             }
             catch(Exception ex)
             {
-                String message = "  !!! Exceção na (" + this.thread + "), continuando do mesmo Código: " + codigo + ", Mensagem: " + ex.getMessage();
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                String dtString = LocalDateTime.now().format(dtf);
+                String message = "--> (" + dtString + ")"+ "  !!! Exceção na (" + this.thread + "), continuando do mesmo Código: " + codigo + ", Mensagem: " + ex.getMessage();
                 System.out.println(message);
                 DataUtils.logProgress(this.exceptionPath, message);
             }
