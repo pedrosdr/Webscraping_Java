@@ -125,7 +125,7 @@ public class Scraping
                         WebElement aba_etapa = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//div[@class=\"mat-tab-label-content\"][text()[contains(., \"%s\")]]", etapa))));
                         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_etapa);
 
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
                         WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//th[text()=\"Nível 0\"]]/tbody/tr[1]")));
                         List<WebElement> tds = tr.findElements(By.xpath(".//child::td"));
 
@@ -185,5 +185,6 @@ public class Scraping
 
         percentuais_saeb.toCSV(outputPath);
         System.out.println("End!");
+        DataUtils.logProgress(logPath, "(" + this.thread + "} End.");
     }
 }
