@@ -125,7 +125,7 @@ public class Scraping
                         WebElement aba_etapa = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//div[@class=\"mat-tab-label-content\"][text()[contains(., \"%s\")]]", etapa))));
                         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_etapa);
 
-                        Thread.sleep(800);
+                        Thread.sleep(1000);
                         WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//th[text()=\"Nível 0\"]]/tbody/tr[1]")));
                         List<WebElement> tds = tr.findElements(By.xpath(".//child::td"));
 
@@ -151,9 +151,6 @@ public class Scraping
                 double speed = 3600.0 * dataCount / elapsedTime;
                 int recordsLeft = codigos.length - dataCount;
                 double hoursLeft = recordsLeft / speed;
-
-                if(codigo.equals("29410720"))
-                    throw new RuntimeException("teste");
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(" --> ")
