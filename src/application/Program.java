@@ -8,8 +8,8 @@ public class Program
 
         Thread t1 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    0, 3113,
-                    "./escolas_refatoracao.csv",
+                    0, 6758,
+                    "./escolas.csv",
                     "./percentuais_t1.csv",
                     "./chromedriver.exe",
                     "./progress_t1.txt",
@@ -26,8 +26,8 @@ public class Program
 
         Thread t2 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    3113, 6226,
-                    "./escolas_refatoracao.csv",
+                    6758, 13516,
+                    "./escolas.csv",
                     "./percentuais_t2.csv",
                     "./chromedriver.exe",
                     "./progress_t2.txt",
@@ -44,8 +44,8 @@ public class Program
 
         Thread t3 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    6226, 9339,
-                    "./escolas_refatoracao.csv",
+                    13516, 20274,
+                    "./escolas.csv",
                     "./percentuais_t3.csv",
                     "./chromedriver.exe",
                     "./progress_t3.txt",

@@ -58,7 +58,7 @@ public class Scraping
             String codigo = codigos[i];
             try
             {
-                driver.get(String.format("http://saeb.inep.gov.br/saeb/resultado-final-externo/boletim?anoProjeto=%s&coEscola=%s", "2021", codigo));
+                driver.get(String.format("http://saeb.inep.gov.br/saeb/resultado-final-externo/boletim?anoProjeto=%s&coEscola=%s", "2019", codigo));
                 WebElement anchor = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='dados-escola']")));
 
                 if(anchor.getAttribute("innerHTML").contains("/  /  -"))
