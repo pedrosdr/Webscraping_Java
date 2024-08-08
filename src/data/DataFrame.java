@@ -16,10 +16,21 @@ public class DataFrame
         this.data = new ArrayList<>();
     };
 
+    // properties
+    public int size()
+    {
+        return data.size();
+    }
+
     // methods
     public void append(DataRow row)
     {
         data.add(row);
+    }
+
+    public void concat(DataFrame df)
+    {
+        df.data.forEach(this::append);
     }
 
     public void toCSV(String path)

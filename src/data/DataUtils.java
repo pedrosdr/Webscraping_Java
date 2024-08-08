@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DataUtils
 {
-    public static List<String> getCodes(String path)
+    public synchronized static List<String> getCodes(String path)
     {
         List<String> codes = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(path)))

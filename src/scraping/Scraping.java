@@ -120,15 +120,18 @@ public class Scraping
                     WebElement aba_disciplina = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//div[@class=\"mat-tab-label-content\"][text()[contains(., \"%s\")]]", disciplina))));
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_disciplina);
 
-                    for(String etapa : etapas)
+                    for(int index_etapa = 0; index_etapa < etapas.size();)
                     {
+                        String etapa = etapas.get(index_etapa);
+
                         WebElement aba_etapa = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//div[@class=\"mat-tab-label-content\"][text()[contains(., \"%s\")]]", etapa))));
                         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_etapa);
 
-                        Thread.sleep(1500);
+                        Thread.sleep(1000);
                         WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//th[text()=\"Nível 0\"]]/tbody/tr[1]")));
                         List<WebElement> tds = tr.findElements(By.xpath(".//child::td"));
 
+                        DataFrame df = new DataFrame();
                         for(int j = 1; j < tds.size(); j++)
                         {
                             WebElement td = tds.get(j);
@@ -139,8 +142,35 @@ public class Scraping
                             row.setDisciplina(disciplina);
                             row.setPercentual(td.getAttribute("innerHTML").trim().replace("%", ""));
                             row.setNivel(String.valueOf(j-1));
-                            percentuais_saeb.append(row);
+                            df.append(row);
                         }
+
+                        if(disciplina.equals("Língua Portuguesa") && etapa.equals("5º ano") && df.size() != 10)
+                        {
+                            System.out.println("        LP AI: número de nívels diferente de 10 - Continuando com a mesma etapa");
+                            continue;
+                        }
+
+                        if(disciplina.equals("Língua Portuguesa") && etapa.equals("9º ano") && df.size() != 9)
+                        {
+                            System.out.println("        LP AF: número de nívels diferente de 9 - Continuando com a mesma etapa");
+                            continue;
+                        }
+
+                        if(disciplina.equals("Matemática") && etapa.equals("5º ano") && df.size() != 11)
+                        {
+                            System.out.println("        MAT AI: número de nívels diferente de 11 - Continuando com a mesma etapa");
+                            continue;
+                        }
+
+                        if(disciplina.equals("Matemática") && etapa.equals("9º ano") && df.size() != 10)
+                        {
+                            System.out.println("        MAT AF: número de nívels diferente de 10 - Continuando com a mesma etapa");
+                            continue;
+                        }
+
+                        percentuais_saeb.concat(df);
+                        index_etapa++;
                     }
                 }
 
