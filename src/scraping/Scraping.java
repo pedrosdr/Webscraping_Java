@@ -61,37 +61,37 @@ public class Scraping
                 driver.get(String.format("http://saeb.inep.gov.br/saeb/resultado-final-externo/boletim?anoProjeto=%s&coEscola=%s", "2019", codigo));
                 WebElement anchor = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='dados-escola']")));
 
-                if(anchor.getAttribute("innerHTML").contains("/  /  -"))
-                {
-                    i++;
-                    dataCount++;
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                    String dtString = LocalDateTime.now().format(dtf);
-                    long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // em segundos
-                    double speed = 3600.0 * dataCount / elapsedTime;
-                    int recordsLeft = codigos.length - dataCount;
-                    double hoursLeft = recordsLeft / speed;
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(" --> ")
-                            .append("! Not found on (").append(this.thread).append("), ")
-                            .append(codigo)
-                            .append(", ").append(String.format("%.2f", 100.0 * dataCount / codigos.length)).append("%")
-                            .append(", ").append(dataCount).append(" records")
-                            .append(", ").append(String.format("%d", elapsedTime)).append(" s")
-                            .append(", ").append(String.format("%.2f", hoursLeft)).append(" hours left")
-                            .append(", ").append(String.format("%.1f", speed)).append(" records/hour")
-                            .append(", ").append(dtString);
-                    System.out.println(sb.toString());
-                    DataUtils.logProgress(logPath, sb.toString());
-                    if(dataCount % 10 == 0)
-                    {
-                        percentuais_saeb.toCSV(outputPath);
-                        System.out.println("   |--> (" + this.thread + "} Arquivo CSV salvo.");
-                        DataUtils.logProgress(logPath, "   |--> (" + this.thread + "} Arquivo CSV salvo.");
-                    }
-                    continue;
-                }
+//                if(anchor.getAttribute("innerHTML").contains("/  /  -"))
+//                {
+//                    i++;
+//                    dataCount++;
+//                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+//                    String dtString = LocalDateTime.now().format(dtf);
+//                    long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // em segundos
+//                    double speed = 3600.0 * dataCount / elapsedTime;
+//                    int recordsLeft = codigos.length - dataCount;
+//                    double hoursLeft = recordsLeft / speed;
+//
+//                    StringBuilder sb = new StringBuilder();
+//                    sb.append(" --> ")
+//                            .append("! Not found on (").append(this.thread).append("), ")
+//                            .append(codigo)
+//                            .append(", ").append(String.format("%.2f", 100.0 * dataCount / codigos.length)).append("%")
+//                            .append(", ").append(dataCount).append(" records")
+//                            .append(", ").append(String.format("%d", elapsedTime)).append(" s")
+//                            .append(", ").append(String.format("%.2f", hoursLeft)).append(" hours left")
+//                            .append(", ").append(String.format("%.1f", speed)).append(" records/hour")
+//                            .append(", ").append(dtString);
+//                    System.out.println(sb.toString());
+//                    DataUtils.logProgress(logPath, sb.toString());
+//                    if(dataCount % 10 == 0)
+//                    {
+//                        percentuais_saeb.toCSV(outputPath);
+//                        System.out.println("   |--> (" + this.thread + "} Arquivo CSV salvo.");
+//                        DataUtils.logProgress(logPath, "   |--> (" + this.thread + "} Arquivo CSV salvo.");
+//                    }
+//                    continue;
+//                }
 
                 List<String> disciplinas = new ArrayList<>();
                 List<String> etapas = new ArrayList<>();
@@ -137,7 +137,7 @@ public class Scraping
                             WebElement td = tds.get(j);
                             DataRow row = new DataRow();
                             row.setCodigo(codigo);
-                            row.setAno("2021");
+                            row.setAno("2019");
                             row.setEtapa(etapa);
                             row.setDisciplina(disciplina);
                             row.setPercentual(td.getAttribute("innerHTML").trim().replace("%", ""));
