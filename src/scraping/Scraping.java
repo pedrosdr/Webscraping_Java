@@ -28,8 +28,19 @@ public class Scraping
     private String thread;
     private String exceptionPath;
     private DataFrame percentuais_saeb;
+    private String ano;
 
-    public Scraping(int fromIndex, int toIndex, String inputPath, String outputPath, String driverPath, String logPath, String exceptionPath, String thread)
+    public Scraping(
+            int fromIndex,
+            int toIndex,
+            String inputPath,
+            String outputPath,
+            String driverPath,
+            String logPath,
+            String exceptionPath,
+            String thread,
+            String ano
+    )
     {
         this.fromIndex = fromIndex;
         this.toIndex = toIndex;
@@ -40,6 +51,7 @@ public class Scraping
         this.thread = thread;
         this.exceptionPath = exceptionPath;
         this.percentuais_saeb = new DataFrame();
+        this.ano = ano;
     }
 
     public void execute() throws InterruptedException {
@@ -58,7 +70,7 @@ public class Scraping
             String codigo = codigos[i];
             try
             {
-                driver.get(String.format("http://saeb.inep.gov.br/saeb/resultado-final-externo/boletim?anoProjeto=%s&coEscola=%s", "2019", codigo));
+                driver.get(String.format("http://saeb.inep.gov.br/saeb/resultado-final-externo/boletim?anoProjeto=%s&coEscola=%s", this.ano, codigo));
                 WebElement anchor = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='dados-escola']")));
 
 //                if(anchor.getAttribute("innerHTML").contains("/  /  -"))
@@ -127,7 +139,7 @@ public class Scraping
                         WebElement aba_etapa = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(String.format("//div[@class=\"mat-tab-label-content\"][text()[contains(., \"%s\")]]", etapa))));
                         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_etapa);
 
-                        Thread.sleep(1000);
+                        Thread.sleep(1200);
                         WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//th[text()=\"Nível 0\"]]/tbody/tr[1]")));
                         List<WebElement> tds = tr.findElements(By.xpath(".//child::td"));
 
@@ -137,7 +149,7 @@ public class Scraping
                             WebElement td = tds.get(j);
                             DataRow row = new DataRow();
                             row.setCodigo(codigo);
-                            row.setAno("2019");
+                            row.setAno(this.ano);
                             row.setEtapa(etapa);
                             row.setDisciplina(disciplina);
                             row.setPercentual(td.getAttribute("innerHTML").trim().replace("%", ""));

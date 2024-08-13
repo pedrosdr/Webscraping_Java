@@ -8,13 +8,14 @@ public class Program
 
         Thread t1 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    0, 6758,
+                    0, 2265,
                     "./escolas.csv",
                     "./percentuais_t1.csv",
                     "./chromedriver.exe",
                     "./progress_t1.txt",
                     "./exceptions_t1.txt",
-                    "Thread 1"
+                    "Thread 1",
+                    "2017"
             );
             try {
                 scraping.execute();
@@ -26,13 +27,14 @@ public class Program
 
         Thread t2 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    6758, 13516,
+                    2265, 4530,
                     "./escolas.csv",
                     "./percentuais_t2.csv",
                     "./chromedriver.exe",
                     "./progress_t2.txt",
                     "./exceptions_t2.txt",
-                    "Thread 2"
+                    "Thread 2",
+                    "2017"
             );
             try {
                 scraping.execute();
@@ -44,13 +46,14 @@ public class Program
 
         Thread t3 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    13516, 20274,
+                    4530, 6797,
                     "./escolas.csv",
                     "./percentuais_t3.csv",
                     "./chromedriver.exe",
                     "./progress_t3.txt",
                     "./exceptions_t3.txt",
-                    "Thread 3"
+                    "Thread 3",
+                    "2017"
             );
             try {
                 scraping.execute();
