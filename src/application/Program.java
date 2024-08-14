@@ -8,14 +8,14 @@ public class Program
 
         Thread t1 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    0, 2265,
+                    0, 8796,
                     "./escolas.csv",
                     "./percentuais_t1.csv",
                     "./chromedriver.exe",
                     "./progress_t1.txt",
                     "./exceptions_t1.txt",
                     "Thread 1",
-                    "2017"
+                    "2023"
             );
             try {
                 scraping.execute();
@@ -27,14 +27,14 @@ public class Program
 
         Thread t2 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    2265, 4530,
+                    8796, 17592,
                     "./escolas.csv",
                     "./percentuais_t2.csv",
                     "./chromedriver.exe",
                     "./progress_t2.txt",
                     "./exceptions_t2.txt",
                     "Thread 2",
-                    "2017"
+                    "2023"
             );
             try {
                 scraping.execute();
@@ -46,14 +46,14 @@ public class Program
 
         Thread t3 = new Thread(() -> {
             Scraping scraping = new Scraping(
-                    4530, 6797,
+                    17592, 26388,
                     "./escolas.csv",
                     "./percentuais_t3.csv",
                     "./chromedriver.exe",
                     "./progress_t3.txt",
                     "./exceptions_t3.txt",
                     "Thread 3",
-                    "2017"
+                    "2023"
             );
             try {
                 scraping.execute();
@@ -62,16 +62,17 @@ public class Program
             }
         });
         t3.start();
-
+//
 //        Thread t4 = new Thread(() -> {
 //            Scraping scraping = new Scraping(
-//                    2517, 3356,
-//                    "./escolas_refatoracao.csv",
+//                    29139, 38852,
+//                    "./escolas.csv",
 //                    "./percentuais_t4.csv",
 //                    "./chromedriver.exe",
 //                    "./progress_t4.txt",
 //                    "./exceptions_t4.txt",
-//                    "Thread 4"
+//                    "Thread 4",
+//                    "2023"
 //            );
 //            try {
 //                scraping.execute();
@@ -119,8 +120,8 @@ public class Program
 
 
         t1.join();
-        t2.join();
-        t3.join();
+//        t2.join();
+//        t3.join();
 //        t4.join();
 //        t5.join();
 //        t6.join();
