@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrapingCities
+public class ScrapingAmostras
 {
     private int fromIndex;
     private int toIndex;
@@ -29,8 +29,11 @@ public class ScrapingCities
     private String exceptionPath;
     private DataFrame percentuais_saeb;
     private String ano;
+    private TipoAmostra tipoAmostra;
+    private String textAmostra;
+    private int idTr;
 
-    public ScrapingCities(
+    public ScrapingAmostras(
             int fromIndex,
             int toIndex,
             String inputPath,
@@ -39,7 +42,8 @@ public class ScrapingCities
             String logPath,
             String exceptionPath,
             String thread,
-            String ano
+            String ano,
+            TipoAmostra tipoAmostra
     )
     {
         this.fromIndex = fromIndex;
@@ -52,6 +56,20 @@ public class ScrapingCities
         this.exceptionPath = exceptionPath;
         this.percentuais_saeb = new DataFrame();
         this.ano = ano;
+        this.tipoAmostra = tipoAmostra;
+
+        if(tipoAmostra == TipoAmostra.MUNICIPIO) {
+            textAmostra = "Total Município";
+            idTr = 1;
+        }
+        else if(tipoAmostra == TipoAmostra.ESTADO) {
+            textAmostra = "Total Estado";
+            idTr = 2;
+        }
+        else {
+            textAmostra = "Total Brasil";
+            idTr = 3;
+        }
     }
 
     public void execute() throws InterruptedException {
@@ -143,7 +161,7 @@ public class ScrapingCities
                         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", aba_etapa);
 
                         Thread.sleep(1000);
-                        WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//td[text()='Total Município']]/tbody/tr[1]")));
+                        WebElement tr = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table[.//td[text()='" + textAmostra + "']]/tbody/tr[" + idTr + "]")));
                         List<WebElement> tds = tr.findElements(By.xpath(".//child::td"));
 
                         DataFrame df = new DataFrame();
